@@ -24,7 +24,7 @@ namespace S10270399_PRG2Assignment
             Status = status;
         }
 
-        public abstract double CalculateFees();
+        public virtual double CalculateFees();
 
         public override string ToString()
         {
