@@ -20,31 +20,31 @@ namespace S10270399_PRG2Assignment
             TerminalName = terminalName;
         }
 
-        public void AddAirline(Airline airline)
-        {
-            Airline.Add(airline);
-        }
-        public void AddBoardingGate(BoardingGate boardingGate)
-        {
-            BoardingGates.Add(boardingGate);
-        }
-        public void GetAirlineFromFlight(Flight flight)
-        {
-            foreach (var airline in Airline)
-            {
-                if (airline.Value.Flights.Contains(flight))
-                {
-                    Console.WriteLine(airline.Value);
-                }
-            }
-        }
-        public void PrintAirlineFees()
-        {
-            foreach (var airline in Airline)
-            {
-                Console.WriteLine(airline.Value);
-            }
-        }
+        //public void AddAirline(Airline airline)
+        //{
+        //    Airline.Add(airline);
+        //}
+        //public void AddBoardingGate(BoardingGate boardingGate)
+        //{
+        //    BoardingGates.Add(boardingGate);
+        //}
+        //public void GetAirlineFromFlight(Flight flight)
+        //{
+        //    foreach (var airline in Airline)
+        //    {
+        //        if (airline.Value.Flights.Contains(flight))
+        //        {
+        //            Console.WriteLine(airline.Value);
+        //        }
+        //    }
+        //}
+        //public void PrintAirlineFees()
+        //{
+        //    foreach (var airline in Airline)
+        //    {
+        //        Console.WriteLine(airline.Value);
+        //    }
+        //}
 
 
 
