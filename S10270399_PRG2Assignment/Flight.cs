@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10270399_PRG2Assignment
 {
-    abstract class Flight // : IComparable<Flight>
+    abstract class Flight : IComparable<Flight>
     {
         public string FlightNumber { get; set; }
         public string Origin { get; set; }
@@ -24,20 +24,20 @@ namespace S10270399_PRG2Assignment
             Status = status;
         }
 
-        public virtual double CalculateFees();
+
+
+
+        public abstract double CalculateFees();
 
         public override string ToString()
         {
-            return FlightNumber;
+            return $"Flight {FlightNumber} from {Origin} to {Destination} at {ExpectedTime:g} - Status: {Status}";
         }
 
-        //// Implementing CompareTo method for sorting by Name
-        //public int CompareTo(Flight other)
-        //{
-        //    if (other == null) return 1;
-        //    return string.Compare(this.Name, other.Name, StringComparison.Ordinal);
-        //}
-
-
+        public int CompareTo(Flight other)
+        {
+            if (other == null) return 1;
+            return string.Compare(this.FlightNumber, other.FlightNumber, StringComparison.Ordinal);
+        }
     }
 }

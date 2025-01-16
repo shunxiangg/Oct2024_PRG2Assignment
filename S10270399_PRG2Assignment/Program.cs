@@ -1,44 +1,45 @@
 ﻿
 
 
-namespace S10270399_PRG2Assignment;
+using S10270399_PRG2Assignment;
 
 
 
 
 string flightfilePath = "flights.csv";
-string[] flightDetails = File.ReadAllLines(filePath);
+string[] flightDetails = File.ReadAllLines(flightfilePath);
 
 
 
 if (File.Exists(flightfilePath))
-{
+    {
     if (flightDetails.Length > 0)
     {
         // Display the headers
         string[] header = flightDetails[0].Split(',');
-Console.WriteLine("{0,-15} {1,-15} {2,-25} {3,-20}", header[0], header[1], header[2], header[3]);
+        Console.WriteLine("{0,-15} {1,-15} {2,-25} {3,-20} {4,-20}", header[0], header[1], header[2], header[3], header[3]);
 
         // Process and display each bus stop's data
-        for (int i = 1; i<busDetails.Length; i++)
+        for (int i = 1; i<flightDetails.Length; i++)
         {
-            string[] data = busDetails[i].Split(',');
-double distance = double.Parse(data[0]);
-string code = data[1];
-string road = data[2];
-string description = data[3];
+            string[] data = flightDetails[i].Split(',');
+            string flightNum = data[0];
+            string origin = data[1];
+            string destination = data[2];
+            datetime departure_arrival = data[3]; 
+            string  specialRequestCode= data[4];
 
-// Create BusStop object (assuming you have a BusStop class defined elsewhere)
-BusStop busStop = new BusStop(distance, code, road, description);
+            // Create BusStop object (assuming you have a BusStop class defined elsewhere)
+            Flight flight = new Flight(flightNum, origin, destination, departure_arrival, specialRequestCode);
 
-// Display the details of each bus stop
-Console.WriteLine("{0,-15} {1,-15} {2,-25} {3,-20}", busStop.Distance, busStop.Code, busStop.Road, busStop.Description);
+            // Display the details of each bus stop
+            Console.WriteLine("{0,-15} {1,-15} {2,-25} {3,-20}", flight.flightNum, flight.origin, flight.destination, flight.departure_arrival, flight.specialRequestCode);
         }
     }
     else
-{
+    {
     Console.WriteLine("No data found in the file.");
-}
+    }
 }
 else
 {
