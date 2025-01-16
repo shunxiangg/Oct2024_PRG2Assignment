@@ -23,13 +23,23 @@ namespace S10270399_PRG2Assignment
             SupportsLWTT = supportsLWTT;
         }
 
-        public void CalculateFees()
+        public double CalculateFees()
         {
-            //Calculate fees
+            if (CurrentFlight == null) return 0;
+
+            double baseFee = CurrentFlight.CalculateFees();
+            int supportedTypes = (SupportsCFFT ? 1 : 0) + (SupportsDDJB ? 1 : 0) + (SupportsLWTT ? 1 : 0);
+
+            // Add premium for gates that support multiple special request types
+            return baseFee * (1 + (supportedTypes * 0.1));
         }
+
         public override string ToString()
         {
-            return GateName;
+            return $"Gate {GateName} - Supports: " +
+                   $"{(SupportsCFFT ? "CFFT " : "")}" +
+                   $"{(SupportsDDJB ? "DDJB " : "")}" +
+                   $"{(SupportsLWTT ? "LWTT" : "")}".Trim();
         }
     }
 }

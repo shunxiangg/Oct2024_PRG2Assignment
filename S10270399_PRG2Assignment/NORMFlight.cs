@@ -15,15 +15,14 @@ namespace S10270399_PRG2Assignment
 
         public override double CalculateFees()
         {
-            //Calculate fees
-            throw new NotImplementedException();
+            return 100.00; // Base fee for normal flights
         }
 
         public override string ToString()
         {
-            return FlightNumber;
+            return $"NORM {base.ToString()}";
         }
-    
-    
+
+
     }
 }

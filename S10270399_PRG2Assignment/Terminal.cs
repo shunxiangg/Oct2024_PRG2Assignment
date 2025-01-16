@@ -48,10 +48,45 @@ namespace S10270399_PRG2Assignment
 
 
 
+        public void AddAirline(Airline airline)
+        {
+            if (!Airlines.ContainsKey(airline.Code))
+            {
+                Airlines.Add(airline.Code, airline);
+            }
+        }
+
+        public void AddBoardingGate(BoardingGate boardingGate)
+        {
+            if (!BoardingGates.ContainsKey(boardingGate.GateName))
+            {
+                BoardingGates.Add(boardingGate.GateName, boardingGate);
+            }
+        }
+
+        public Airline GetAirlineFromFlight(Flight flight)
+        {
+            return Airlines.Values.FirstOrDefault(airline =>
+                airline.Flights.ContainsKey(flight.FlightNumber));
+        }
+
+        public void PrintAirlineFees()
+        {
+            Console.WriteLine($"Fee Report for Terminal {TerminalName}:");
+            Console.WriteLine(new string('-', 50));
+
+            foreach (var airline in Airlines.Values)
+            {
+                Console.WriteLine($"{airline.Name} ({airline.Code}): ${airline.CalculateFees():F2}");
+            }
+
+            Console.WriteLine(new string('-', 50));
+            Console.WriteLine($"Total Terminal Fees: ${Airlines.Values.Sum(a => a.CalculateFees()):F2}");
+        }
 
         public override string ToString()
         {
-            return "TerminalName: " + TerminalName;
+            return $"Terminal {TerminalName} - {Airlines.Count} Airlines, {Flights.Count} Flights, {BoardingGates.Count} Gates, {GateFees.Count} GatesFees";
         }
     }
 }

@@ -17,22 +17,23 @@ namespace S10270399_PRG2Assignment
             Flights.Add(flight.FlightNumber, flight);
         }
 
-        public void CalculateFees()
+        public double CalculateFees()
         {
-            //Calculate fees
+            return Flights.Values.Sum(flight => flight.CalculateFees());
         }
 
         public void RemoveFlight(Flight flight)
         {
-            Flights.Remove(flight.FlightNumber);
+            if (Flights.ContainsKey(flight.FlightNumber))
+            {
+                Flights.Remove(flight.FlightNumber);
+            }
         }
 
         public override string ToString()
         {
-            return Name;
+            return $"Airline: {Name} ({Code}) - {Flights.Count} flights";
         }
-
-
 
 
     }

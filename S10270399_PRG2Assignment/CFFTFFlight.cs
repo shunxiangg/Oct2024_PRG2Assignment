@@ -16,14 +16,12 @@ namespace S10270399_PRG2Assignment
         }
         public override double CalculateFees()
         {
-            throw new NotImplementedException();
+            return 100.00 + RequestFee; // Base fee + special request fee
         }
-
-        
 
         public override string ToString()
         {
-            return "RequestFee: " + RequestFee;
+            return $"CFFT {base.ToString()} - Request Fee: ${RequestFee:F2}";
         }
     }
 }
