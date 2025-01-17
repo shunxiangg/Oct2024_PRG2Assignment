@@ -12,7 +12,7 @@ namespace S10270399_PRG2Assignment
         public LWTTFlight() { }
         public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedtime, string status, double requestFee) : base(flightNumber, origin, destination, expectedtime, status)
         {
-    
+
             RequestFee = requestFee;
         }
 

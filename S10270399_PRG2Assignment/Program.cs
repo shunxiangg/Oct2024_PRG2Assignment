@@ -45,8 +45,24 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        //static void LoadBoardingGates()
-
+        static void LoadBoardingGates()
+        {
+            if (File.Exists("boardinggates.csv"))
+            {
+                string[] lines = File.ReadAllLines("boardinggates.csv");
+                for (int i = 1; i < lines.Length; i++) // Skip header
+                {
+                    string[] data = lines[i].Split(',');
+                    var gate = new BoardingGate(
+                        data[0].Trim(),
+                        bool.Parse(data[1]),
+                        bool.Parse(data[2]),
+                        bool.Parse(data[3])
+                    );
+                    terminal.AddBoardingGate(gate);
+                }
+            }
+        }
 
         static void LoadFlights()
         {
@@ -67,8 +83,43 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        //static void ProcessFlightLine(string line)
+        static void ProcessFlightLine(string line)
+        {
+            string[] data = line.Split(',');
+            string flightNum = data[0].Trim();
+            string origin = data[1].Trim();
+            string destination = data[2].Trim();
 
+            if (!DateTime.TryParse(data[3], out DateTime expectedTime))
+            {
+                throw new FormatException($"Invalid date format for flight: {flightNum}");
+            }
+
+            string specialRequestCode = data.Length > 4 ? data[4].Trim() : "";
+            string status = "Scheduled";
+
+            Flight flight = CreateFlight(flightNum, origin, destination, expectedTime, status, specialRequestCode);
+
+            // Add flight to terminal and airline
+            string airlineCode = flightNum.Substring(0, 2);
+            if (terminal.Airlines.TryGetValue(airlineCode, out Airline airline))
+            {
+                airline.AddFlight(flight);
+                terminal.Flights[flightNum] = flight;
+            }
+        }
+
+        static Flight CreateFlight(string flightNum, string origin, string destination,
+            DateTime expectedTime, string status, string specialRequestCode)
+        {
+            return specialRequestCode switch
+            {
+                "CFFT" => new CFFTFFlight(flightNum, origin, destination, expectedTime, status, 50.0),
+                "DDJB" => new DDJBFlight(flightNum, origin, destination, expectedTime, status, 75.0),
+                "LWTT" => new LWTTFlight(flightNum, origin, destination, expectedTime, status, 60.0),
+                _ => new NORMFlight(flightNum, origin, destination, expectedTime, status),
+            };
+        }
 
         static void RunMainMenu()
         {
@@ -194,25 +245,25 @@ namespace S10270399_PRG2Assignment
                 return;
             }
 
-            // display flight and gate details
+            // Display flight and gate details
             DisplayFlightDetails(flight);
             Console.WriteLine($"\nBoarding Gate: {gate}");
 
-            // update flight status
+            // Update flight status
             Console.WriteLine("\nWould you like to update the status of the flight? (Y/N)");
             if (Console.ReadLine().Trim().ToUpper() == "Y")
             {
                 UpdateFlightStatus(flight);
             }
 
-            //assign gate
+            // Assign gate
             gate.Flight = flight;
             Console.WriteLine($"\nFlight {flightNum} has been assigned to Boarding Gate {gateName}!");
         }
 
         static void CreateNewFlight()
         {
-            Console.WriteLine("need to implement77777777777777777777777777777777777777777777777777777777777");
+            Console.WriteLine("add this feature 777777777777777777777777777777");
         }
 
         static void DisplayAirlineFlights()
@@ -245,11 +296,77 @@ namespace S10270399_PRG2Assignment
 
         static void ModifyFlightDetails()
         {
-            Console.WriteLine("need to implement7777777777777777777777777777777777777777777777777777777777t");
+            Console.WriteLine("add this feature 777777777777777777777777777777");
         }
 
-        //static void DisplayFlightSchedule()
+        static void DisplayFlightSchedule()
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
+            Console.WriteLine("=============================================\n");
 
+            var sortedFlights = terminal.Flights.Values
+                .OrderBy(f => f.Expectedtime)
+                .ToList();
+
+            Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25} {5,-10} {6,-15}",
+                "Flight Number", "Airline Name", "Origin", "Destination", "Expected Time", "Status", "Gate");
+
+            foreach (var flight in sortedFlights)
+            {
+                string gateName = terminal.BoardingGates.Values
+                    .FirstOrDefault(g => g.Flight?.FlightNumber == flight.FlightNumber)?.GateName ?? "Unassigned";
+
+                Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25:g} {5,-10} {6,-15}",
+                    flight.FlightNumber,
+                    terminal.GetAirlineFromFlight(flight)?.Name ?? "Unknown",
+                    flight.Origin,
+                    flight.Destination,
+                    flight.Expectedtime,
+                    flight.Status,
+                    gateName);
+            }
+        }
+
+        static void DisplayFlightDetails(Flight flight)
+        {
+            Console.WriteLine($"\nFlight Number: {flight.FlightNumber}");
+            Console.WriteLine($"Origin: {flight.Origin}");
+            Console.WriteLine($"Destination: {flight.Destination}");
+            Console.WriteLine($"Expected Time: {flight.Expectedtime:g}");
+            Console.WriteLine($"Status: {flight.Status}");
+
+            if (flight is CFFTFFlight)
+                Console.WriteLine("Special Request: CFFT");
+            else if (flight is DDJBFlight)
+                Console.WriteLine("Special Request: DDJB");
+            else if (flight is LWTTFlight)
+                Console.WriteLine("Special Request: LWTT");
+        }
+
+        static void UpdateFlightStatus(Flight flight)
+        {
+            Console.WriteLine("1. Delayed");
+            Console.WriteLine("2. Boarding");
+            Console.WriteLine("3. On Time");
+            Console.WriteLine("\nSelect new status:");
+
+            string choice = Console.ReadLine().Trim();
+            switch (choice)
+            {
+                case "1":
+                    flight.Status = "Delayed";
+                    break;
+                case "2":
+                    flight.Status = "Boarding";
+                    break;
+                case "3":
+                    flight.Status = "On Time";
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Status unchanged.");
+                    break;
+            }
+        }
     }
 }
-
