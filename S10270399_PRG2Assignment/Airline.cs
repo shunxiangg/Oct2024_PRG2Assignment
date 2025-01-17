@@ -14,26 +14,62 @@ namespace S10270399_PRG2Assignment
 
         public void AddFlight(Flight flight)
         {
-            Flights.Add(flight.FlightNumber, flight);
+            Flights[flight.FlightNumber] = flight;
         }
 
-        public void CalculateFees()
+        public double CalculateFees()
         {
-            //Calculate fees
+            double totalFees = Flights.Values.Sum(flight => flight.CalculateFees());
+            if ()
+            // Apply discounts
+            int flightCount = Flights.Count;
+
+            // Discount for every 3 flights
+            double discount = Math.Floor(flightCount / 3.0) * 350.00;
+
+            // Additional 3% discount for more than 5 flights
+            if (flightCount > 5)
+            {
+                discount += totalFees * 0.03;
+            }
+
+            // Check for special origin cities discount
+            foreach (var flight in Flights.Values)
+            {
+                if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" ||
+                    flight.Origin == "Tokyo (NRT)")
+                {
+                    discount += 25.00;
+                }
+
+                // Check for off-peak timing discount
+                var flightTime = flight.Expectedtime.TimeOfDay;
+                if (flightTime < TimeSpan.FromHours(11) || flightTime > TimeSpan.FromHours(21))
+                {
+                    discount += 110.00;
+                }
+
+                // Check for no special request code discount
+                if (flight is NORMFlight)
+                {
+                    discount += 50.00;
+                }
+            }
+
+            return Math.Max(0, totalFees - discount);
         }
 
         public void RemoveFlight(Flight flight)
         {
-            Flights.Remove(flight.FlightNumber);
+            if (Flights.ContainsKey(flight.FlightNumber))
+            {
+                Flights.Remove(flight.FlightNumber);
+            }
         }
 
         public override string ToString()
         {
-            return Name;
+            return $"Airline: {Name} ({Code}) - {Flights.Count} flights";
         }
-
-
-
-
     }
 }

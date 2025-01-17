@@ -17,7 +17,8 @@ namespace S10270399_PRG2Assignment
 
         public override double CalculateFees()
         {
-            //Calculate fees
+            //Calculate fees    
+
             throw new NotImplementedException();
         }
 
