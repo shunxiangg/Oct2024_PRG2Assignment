@@ -15,7 +15,10 @@ namespace S10270399_PRG2Assignment
 
         public override double CalculateFees()
         {
-            return 100.00; // Base fee for normal flights
+            {
+                // Base fee for normal flights
+                return Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+            }
         }
 
         public override string ToString()

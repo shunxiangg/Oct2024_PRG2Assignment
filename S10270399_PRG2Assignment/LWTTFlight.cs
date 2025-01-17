@@ -18,7 +18,9 @@ namespace S10270399_PRG2Assignment
 
         public override double CalculateFees()
         {
-            return 100.00 + RequestFee; // Base fee + special request fee
+            // Base fee + LWTT special request fee
+            double baseFee = Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+            return baseFee + 500.00 + RequestFee;
         }
 
         public override string ToString()

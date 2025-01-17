@@ -25,9 +25,9 @@ namespace S10270399_PRG2Assignment
 
         public double CalculateFees()
         {
-            if (CurrentFlight == null) return 0;
+            if (Flight == null) return 0;
 
-            double baseFee = CurrentFlight.CalculateFees();
+            double baseFee = Flight.CalculateFees();
             int supportedTypes = (SupportsCFFT ? 1 : 0) + (SupportsDDJB ? 1 : 0) + (SupportsLWTT ? 1 : 0);
 
             // Add premium for gates that support multiple special request types
