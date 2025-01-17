@@ -17,16 +17,15 @@ namespace S10270399_PRG2Assignment
 
         public override double CalculateFees()
         {
-            //Calculate fees    
-
-            throw new NotImplementedException();
+            // Base fee + DDJB special request fee
+            double baseFee = Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+            return baseFee + 300.00 + RequestFee;
         }
 
         public override string ToString()
         {
-            return "RequestFee: " + RequestFee;
+            return $"DDJB {base.ToString()} - Request Fee: ${RequestFee:F2}";
         }
-    }
-    {
+
     }
 }
