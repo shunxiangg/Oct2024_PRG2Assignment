@@ -20,7 +20,7 @@ namespace S10270399_PRG2Assignment
         public double CalculateFees()
         {
             double totalFees = Flights.Values.Sum(flight => flight.CalculateFees());
-            if ()
+
             // Apply discounts
             int flightCount = Flights.Count;
 
