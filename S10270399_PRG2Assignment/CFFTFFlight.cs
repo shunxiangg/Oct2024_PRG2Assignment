@@ -16,14 +16,14 @@ namespace S10270399_PRG2Assignment
         }
         public override double CalculateFees()
         {
-            throw new NotImplementedException();
+            // Base fee + CFFT special request fee
+            double baseFee = Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+            return baseFee + 150.00 + RequestFee;
         }
-
-        
 
         public override string ToString()
         {
-            return "RequestFee: " + RequestFee;
+            return $"CFFT {base.ToString()} - Request Fee: ${RequestFee:F2}";
         }
     }
 }
