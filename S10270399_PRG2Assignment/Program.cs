@@ -182,12 +182,12 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Flights for Changi Airport Terminal 5");
             Console.WriteLine("=============================================\n");
-            Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25}",
-                "Flight Number", "Airline Name", "Origin", "Destination", "Expected Time");
+            Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-18} {4,-25}",
+                "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
 
             foreach (var flight in terminal.Flights.Values)
             {
-                Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25:g}",
+                Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-18} {4,-25:g}",
                     flight.FlightNumber,
                     terminal.GetAirlineFromFlight(flight)?.Name ?? "Unknown",
                     flight.Origin,
@@ -201,12 +201,12 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
             Console.WriteLine("=============================================\n");
-            Console.WriteLine("{0,-10} {1,-6} {2,-6} {3,-6} {4,-15}",
+            Console.WriteLine("{0,-13} {1,-13} {2,-13} {3,-13} {4,-15}",
                 "Gate", "DDJB", "CFFT", "LWTT", "Assigned Flight");
 
             foreach (var gate in terminal.BoardingGates.Values)
             {
-                Console.WriteLine("{0,-10} {1,-6} {2,-6} {3,-6} {4,-15}",
+                Console.WriteLine("{0,-13} {1,-13} {2,-13} {3,-13} {4,-15}",
                     gate.GateName,
                     gate.SupportsDDJB,
                     gate.SupportsCFFT,
@@ -219,7 +219,7 @@ namespace S10270399_PRG2Assignment
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Assign a Boarding Gate to a Flight");
-            Console.WriteLine("=============================================\n");
+            Console.WriteLine("=============================================");
 
             Console.WriteLine("Enter Flight Number:");
             string flightNum = Console.ReadLine().Trim();
@@ -310,7 +310,7 @@ namespace S10270399_PRG2Assignment
                 .ToList();
 
             Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25} {5,-10} {6,-15}",
-                "Flight Number", "Airline Name", "Origin", "Destination", "Expected Time", "Status", "Gate");
+                "Flight Number", "Airline Name", "Origin", "Destination", "Departure/Arrival Time", "Status", "Boarding Gate");
 
             foreach (var flight in sortedFlights)
             {
@@ -334,14 +334,16 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"Origin: {flight.Origin}");
             Console.WriteLine($"Destination: {flight.Destination}");
             Console.WriteLine($"Expected Time: {flight.Expectedtime:g}");
-            Console.WriteLine($"Status: {flight.Status}");
+            //Console.WriteLine($"Status: {flight.Status}");
 
             if (flight is CFFTFFlight)
-                Console.WriteLine("Special Request: CFFT");
+                Console.WriteLine("Special 33Request: CFFT");
             else if (flight is DDJBFlight)
-                Console.WriteLine("Special Request: DDJB");
+                Console.WriteLine("Special 33Request: DDJB");
             else if (flight is LWTTFlight)
-                Console.WriteLine("Special Request: LWTT");
+                Console.WriteLine("Special 33Request: LWTT");
+            else if (flight is NORMFlight)
+                Console.WriteLine("Special Request Code: None");
         }
 
         static void UpdateFlightStatus(Flight flight)
