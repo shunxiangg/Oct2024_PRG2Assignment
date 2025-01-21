@@ -36,10 +36,10 @@ namespace S10270399_PRG2Assignment
 
         public override string ToString()
         {
-            return $"Gate {GateName} - Supports: " +
-                   $"{(SupportsCFFT ? "CFFT " : "")}" +
-                   $"{(SupportsDDJB ? "DDJB " : "")}" +
-                   $"{(SupportsLWTT ? "LWTT" : "")}".Trim();
+            return $"Boarding Gate Name: {GateName}\n" +
+                   $"Supports DDJB: {SupportsDDJB}\n" +
+                   $"Supports CFFT: {SupportsCFFT}\n" +
+                   $"Supports LWTT: {SupportsLWTT}";
         }
     }
 }
