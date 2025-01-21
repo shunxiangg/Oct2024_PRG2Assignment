@@ -1,4 +1,10 @@
-﻿using System;
+﻿//==========================================================
+// Student1 Number	: S10267626
+// Student1 Name	: Aiden Tan Yihan
+// Student2 Number  : S10270399
+// Partner2 Name	: Ang Shun Xiang
+//==========================================================
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

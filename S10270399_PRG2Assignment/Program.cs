@@ -1,4 +1,14 @@
-﻿using S10270399_PRG2Assignment;
+﻿
+//==========================================================
+// Student1 Number	: S10267626
+// Student1 Name	: Aiden Tan Yihan
+// Student2 Number  : S10270399
+// Partner2 Name	: Ang Shun Xiang
+//==========================================================
+
+
+
+using S10270399_PRG2Assignment;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,6 +42,9 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"{terminal.Flights.Count} Flights Loaded!\n");
         }
 
+        //==========================================================
+        // FEATURE 1
+        //==========================================================
         static void LoadAirlines()
         {
             if (File.Exists("airlines.csv"))
@@ -65,6 +78,10 @@ namespace S10270399_PRG2Assignment
             }
         }
 
+
+        //==========================================================
+        // FEATURE 2
+        //==========================================================
         static void LoadFlights()
         {
             if (File.Exists("flights.csv"))
@@ -83,7 +100,7 @@ namespace S10270399_PRG2Assignment
                 }
             }
         }
-
+        //shunxiang
         static void ProcessFlightLine(string line)
         {
             string[] data = line.Split(',');
@@ -109,7 +126,7 @@ namespace S10270399_PRG2Assignment
                 terminal.Flights[flightNum] = flight;
             }
         }
-
+        //shunxiang
         static Flight CreateFlight(string flightNum, string origin, string destination, DateTime expectedTime, string status, string specialRequestCode)
         {
             if (specialRequestCode == "CFFT")
@@ -130,62 +147,12 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        static void RunMainMenu()
-        {
-            while (true)
-            {
-                DisplayMainMenu();
-                string choice = Console.ReadLine();
 
-                switch (choice)
-                {
-                    case "1":
-                        ListAllFlights();
-                        break;
-                    case "2":
-                        ListBoardingGates();
-                        break;
-                    case "3":
-                        AssignBoardingGate();
-                        break;
-                    case "4":
-                        CreateNewFlight();
-                        break;
-                    case "5":
-                        DisplayAirlineFlights();
-                        break;
-                    case "6":
-                        ModifyFlightDetails();
-                        break;
-                    case "7":
-                        DisplayFlightSchedule();
-                        break;
-                    case "0":
-                        Console.WriteLine("Goodbye!");
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
-        }
 
-        static void DisplayMainMenu()
-        {
-            Console.WriteLine("\n=============================================");
-            Console.WriteLine("Welcome to Changi Airport Terminal 5");
-            Console.WriteLine("=============================================");
-            Console.WriteLine("1. List All Flights");
-            Console.WriteLine("2. List Boarding Gates");
-            Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-            Console.WriteLine("4. Create Flight");
-            Console.WriteLine("5. Display Airline Flights");
-            Console.WriteLine("6. Modify Flight Details");
-            Console.WriteLine("7. Display Flight Schedule");
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("\nPlease select your option:");
-        }
 
+        //==========================================================
+        // FEATURE 3
+        //==========================================================
         static void ListAllFlights()
         {
             Console.WriteLine("\n=============================================");
@@ -208,6 +175,9 @@ namespace S10270399_PRG2Assignment
             }
         }
 
+        //==========================================================
+        // FEATURE 4
+        //==========================================================
         static void ListBoardingGates()
         {
             Console.WriteLine("\n=============================================");
@@ -227,6 +197,9 @@ namespace S10270399_PRG2Assignment
             }
         }
 
+        //==========================================================
+        // FEATURE 5
+        //==========================================================
         static void AssignBoardingGate()
         {
             Console.WriteLine("\n=============================================");
@@ -273,6 +246,9 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"\nFlight {flightNum} has been assigned to Boarding Gate {gateName}!");
         }
 
+        //==========================================================
+        // FEATURE 6
+        //==========================================================
         static void CreateNewFlight()
         {
             Console.WriteLine("\n=============================================");
@@ -371,7 +347,9 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine($"Error creating flight: {ex.Message}");
             }
         }
-
+        //==========================================================
+        // FEATURE 7
+        //==========================================================
         static void DisplayAirlineFlights()
         {
             Console.WriteLine("\n=============================================");
@@ -400,6 +378,9 @@ namespace S10270399_PRG2Assignment
             }
         }
 
+        //==========================================================
+        // FEATURE 8
+        //==========================================================
         static void ModifyFlightDetails()
         {
             Console.WriteLine("\n=============================================");
@@ -459,7 +440,6 @@ namespace S10270399_PRG2Assignment
                     break;
             }
         }
-
 
         static void ModifyFlight(Flight flight)
         {
@@ -591,7 +571,7 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine($"Error modifying flight: {ex.Message}");
             }
         }
-
+      
         static void DeleteFlight(Airline airline, Flight flight)
         {
             Console.Write("Are you sure you want to delete this flight? (Y/N): ");
@@ -622,13 +602,9 @@ namespace S10270399_PRG2Assignment
 
 
 
-
-
-
-
-
-
-
+        //==========================================================
+        // FEATURE 9
+        //==========================================================
 
         static void DisplayFlightSchedule()
         {
@@ -641,7 +617,7 @@ namespace S10270399_PRG2Assignment
             //  IComparable Sort()
             sortedFlights.Sort();
 
-            Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25} {5,-10} {6,-15}", "Flight Number", "Airline Name", "Origin", "Destination", "Departure/Arrival Time", "Status", "Boarding Gate");
+            Console.WriteLine("{0,-15} {1,-20} {2,-18} {3,-18} {4,-25} {5,-10} {6,-15}", "Flight Number", "Airline Name", "Origin", "Destination", "Departure/Arrival Time", "Status", "Boarding Gate");
 
             foreach (var flight in sortedFlights)
             {
@@ -664,7 +640,7 @@ namespace S10270399_PRG2Assignment
                     airlineName = airline.Name;
                 }
 
-                Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25:g} {5,-10} {6,-15}",
+                Console.WriteLine("{0,-15} {1,-20} {2,-18} {3,-18} {4,-25:G} {5,-10} {6,-15}",
                     flight.FlightNumber,
                     airlineName,
                     flight.Origin,
@@ -674,6 +650,10 @@ namespace S10270399_PRG2Assignment
                     gateName);
             }
         }
+        
+
+
+
 
         static void DisplayFlightDetails(Flight flight)
         {
@@ -692,7 +672,7 @@ namespace S10270399_PRG2Assignment
             else if (flight is NORMFlight)
                 Console.WriteLine("Special Request Code: None");
         }
-
+        
         static void UpdateFlightStatus(Flight flight)
         {
             Console.WriteLine("1. Delayed");
@@ -716,6 +696,67 @@ namespace S10270399_PRG2Assignment
                     Console.WriteLine("Invalid choice. Status unchanged.");
                     break;
             }
+        }
+
+
+
+
+
+
+        static void RunMainMenu()
+        {
+            while (true)
+            {
+                DisplayMainMenu();
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        ListAllFlights();
+                        break;
+                    case "2":
+                        ListBoardingGates();
+                        break;
+                    case "3":
+                        AssignBoardingGate();
+                        break;
+                    case "4":
+                        CreateNewFlight();
+                        break;
+                    case "5":
+                        DisplayAirlineFlights();
+                        break;
+                    case "6":
+                        ModifyFlightDetails();
+                        break;
+                    case "7":
+                        DisplayFlightSchedule();
+                        break;
+                    case "0":
+                        Console.WriteLine("Goodbye!");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+        }
+
+        static void DisplayMainMenu()
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Welcome to Changi Airport Terminal 5");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("1. List All Flights");
+            Console.WriteLine("2. List Boarding Gates");
+            Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+            Console.WriteLine("4. Create Flight");
+            Console.WriteLine("5. Display Airline Flights");
+            Console.WriteLine("6. Modify Flight Details");
+            Console.WriteLine("7. Display Flight Schedule");
+            Console.WriteLine("0. Exit");
+            Console.WriteLine("\nPlease select your option:");
         }
     }
 }
