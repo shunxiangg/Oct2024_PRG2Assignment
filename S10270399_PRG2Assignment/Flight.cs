@@ -29,14 +29,7 @@ namespace S10270399_PRG2Assignment
 
         public abstract double CalculateFees();
 
-        //public override string ToString()
-        //{
-        //    return "FlightNumber" + FlightNumber +
-        //        "Origin" + Origin +
-        //        "Destination" + Destination +
-        //        "ExpectedTime" + ExpectedTime +
-        //        "Status" + Status;
-        //}
+    
         public override string ToString()
         {
             return $"Flight {FlightNumber} from {Origin} to {Destination} at {Expectedtime:g} - Status: {Status}";
