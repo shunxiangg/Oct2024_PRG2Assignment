@@ -1,4 +1,10 @@
-﻿using System;
+﻿//==========================================================
+// Student1 Number	: S10267626
+// Student1 Name	: Aiden Tan Yihan
+// Student2 Number  : S10270399
+// Partner2 Name	: Ang Shun Xiang
+//==========================================================
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,14 +35,7 @@ namespace S10270399_PRG2Assignment
 
         public abstract double CalculateFees();
 
-        //public override string ToString()
-        //{
-        //    return "FlightNumber" + FlightNumber +
-        //        "Origin" + Origin +
-        //        "Destination" + Destination +
-        //        "ExpectedTime" + ExpectedTime +
-        //        "Status" + Status;
-        //}
+    
         public override string ToString()
         {
             return $"Flight {FlightNumber} from {Origin} to {Destination} at {Expectedtime:g} - Status: {Status}";
