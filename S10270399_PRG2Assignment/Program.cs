@@ -636,9 +636,10 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
             Console.WriteLine("=============================================\n");
 
-            var sortedFlights = terminal.Flights.Values
-                .OrderBy(f => f.Expectedtime)
-                .ToList();
+            
+            List<Flight> sortedFlights = new List<Flight>(terminal.Flights.Values);
+            //  IComparable Sort()
+            sortedFlights.Sort();
 
             Console.WriteLine("{0,-15} {1,-15} {2,-15} {3,-15} {4,-25} {5,-10} {6,-15}", "Flight Number", "Airline Name", "Origin", "Destination", "Departure/Arrival Time", "Status", "Boarding Gate");
 
