@@ -285,6 +285,13 @@ namespace S10270399_PRG2Assignment
                 Console.Write("Enter Flight Number: ");
                 string flightNum = Console.ReadLine().Trim().ToUpper();
 
+                // Validate flight number format (2 letters followed by space and numbers)
+                if (!System.Text.RegularExpressions.Regex.IsMatch(flightNum, @"^[A-Z]{2}\s\d+$"))
+                {
+                    Console.WriteLine("Invalid flight number format. Should be like 'SQ 123'");
+                    return;
+                }
+
                 // Check if flight already exists
                 if (terminal.Flights.ContainsKey(flightNum))
                 {
@@ -430,7 +437,7 @@ namespace S10270399_PRG2Assignment
             if (!selectedAirline.Flights.TryGetValue(flightNum, out Flight selectedFlight))
             {
                 Console.WriteLine("Flight not found.");
-                
+                return;
             }
 
             Console.WriteLine("\n1. Modify Flight");
@@ -449,7 +456,7 @@ namespace S10270399_PRG2Assignment
                     break;
                 default:
                     Console.WriteLine("Invalid option.");
-                  
+                    break;
             }
         }
 
@@ -491,7 +498,7 @@ namespace S10270399_PRG2Assignment
                         UpdateFlightStatus(flight);
                         break;
 
-                    case "3":
+                    case "3":   //-handling of user input for special request
                         Console.WriteLine("Note: Changing special request code will create a new flight object.");
                         Console.Write("Enter new Special Request Code (CFFT/DDJB/LWTT/None): ");
                         string newCode = Console.ReadLine().Trim().ToUpper();
@@ -505,10 +512,22 @@ namespace S10270399_PRG2Assignment
                         {
                             newFlight = new DDJBFlight(flight.FlightNumber, flight.Origin, flight.Destination, flight.Expectedtime, flight.Status, 75.0);
                         }
-                    
+                        else if (newCode == "LWTT")
+                        {
+                            newFlight = new LWTTFlight(flight.FlightNumber, flight.Origin, flight.Destination, flight.Expectedtime, flight.Status, 60.0);
+                        }
+                        else if (newCode == "NONE")
+                        {
+                            newFlight = new NORMFlight(flight.FlightNumber, flight.Origin, flight.Destination, flight.Expectedtime, flight.Status);
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Invalid special request code");
+                        }
 
                         // Replace flight in terminal and airline
                         string airlineCode = flight.FlightNumber.Substring(0, 2);
+                        terminal.Flights[flight.FlightNumber] = newFlight;
                         terminal.Airlines[airlineCode].Flights[flight.FlightNumber] = newFlight;
                         break;
 
@@ -539,6 +558,7 @@ namespace S10270399_PRG2Assignment
                                 Console.WriteLine("Gate already assigned to another flight!");
                                 return;
                             }
+                            newGate.Flight = flight;
                         }
                         else
                         {
@@ -555,7 +575,16 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine("\nFlight updated!");
                 DisplayFlightDetails(flight);
 
-              
+                BoardingGate assignedGate = null; //make it null
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        assignedGate = gate;
+                        Console.WriteLine($"Boarding Gate: {assignedGate?.GateName ?? "Unassigned"}");
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -572,7 +601,22 @@ namespace S10270399_PRG2Assignment
                 terminal.Flights.Remove(flight.FlightNumber);
                 airline.RemoveFlight(flight);
 
-              
+                BoardingGate gate = null;
+                foreach (var g in terminal.BoardingGates.Values)
+                {
+                    if (g.Flight != null && g.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        gate = g;
+                        break;
+                    }
+                }
+
+                if (gate != null)
+                {
+                    gate.Flight = null;
+                }
+
+                Console.WriteLine($"Flight {flight.FlightNumber} has been deleted.");
             }
         }
 
