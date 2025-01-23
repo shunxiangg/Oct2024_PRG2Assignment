@@ -100,7 +100,7 @@ namespace S10270399_PRG2Assignment
                 }
             }
         }
-        //shunxiang
+        
         static void ProcessFlightLine(string line)
         {
             string[] data = line.Split(',');
@@ -126,7 +126,7 @@ namespace S10270399_PRG2Assignment
                 terminal.Flights[flightNum] = flight;
             }
         }
-        //shunxiang
+        
         static Flight CreateFlight(string flightNum, string origin, string destination, DateTime expectedTime, string status, string specialRequestCode)
         {
             if (specialRequestCode == "CFFT")
