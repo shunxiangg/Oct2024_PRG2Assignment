@@ -578,7 +578,7 @@ namespace S10270399_PRG2Assignment
             //    }
             //    else
             //    {
-            //        Console.WriteLine($"Boarding Gate: Unassigned");
+            //        Console.WriteLine($"Boarding Gate: Unassigned"); // display the boarding gate namw if found, otherwise display "Unassigned"
             //        break;
             //    }
             //}
@@ -589,13 +589,13 @@ namespace S10270399_PRG2Assignment
             {
                 if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
                 {
-                    assignedGate = gate;
-                    gateFound = true;
-                    break;
+                    assignedGate = gate;   // if a match is found assign this gate to 'assignedGate'
+                    gateFound = true;      // set the flag to true indicating a gate was found
+                    break;                 // exit the loop since we've found the matching gatw
                 }
             }
 
-            Console.WriteLine($"Boarding Gate: {(gateFound ? assignedGate.GateName : "Unassigned")}");
+            Console.WriteLine($"Boarding Gate: {(gateFound ? assignedGate.GateName : "Unassigned")}");   /// display the boarding gate namw if found, otherwise display "Unassigned"
         }
 
         public static void DeleteFlight(Airline airline, Flight flight)
