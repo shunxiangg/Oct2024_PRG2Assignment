@@ -20,13 +20,13 @@ namespace S10270399_PRG2Assignment
     {
         static Terminal? terminal;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             InitializeSystem();
             RunMainMenu();
         }
 
-        static void InitializeSystem()
+        public static void InitializeSystem()
         {
             Console.WriteLine("Loading Airlines...");
             terminal = new Terminal("Terminal 5");
@@ -45,7 +45,7 @@ namespace S10270399_PRG2Assignment
         //==========================================================
         // FEATURE 1
         //==========================================================
-        static void LoadAirlines()
+        public static void LoadAirlines()
         {
             if (File.Exists("airlines.csv"))
             {
@@ -59,7 +59,7 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        static void LoadBoardingGates()
+        public static void LoadBoardingGates()
         {
             if (File.Exists("boardinggates.csv"))
             {
@@ -82,7 +82,7 @@ namespace S10270399_PRG2Assignment
         //==========================================================
         // FEATURE 2
         //==========================================================
-        static void LoadFlights()
+        public static void LoadFlights()
         {
             if (File.Exists("flights.csv"))
             {
@@ -100,8 +100,8 @@ namespace S10270399_PRG2Assignment
                 }
             }
         }
-        
-        static void ProcessFlightLine(string line)
+
+        public static void ProcessFlightLine(string line)
         {
             string[] data = line.Split(',');
             string flightNum = data[0].Trim();
@@ -126,8 +126,8 @@ namespace S10270399_PRG2Assignment
                 terminal.Flights[flightNum] = flight;
             }
         }
-        
-        static Flight CreateFlight(string flightNum, string origin, string destination, DateTime expectedTime, string status, string specialRequestCode)
+
+        public static Flight CreateFlight(string flightNum, string origin, string destination, DateTime expectedTime, string status, string specialRequestCode)
         {
             if (specialRequestCode == "CFFT")
             {
@@ -153,7 +153,7 @@ namespace S10270399_PRG2Assignment
         //==========================================================
         // FEATURE 3
         //==========================================================
-        static void ListAllFlights()
+        public static void ListAllFlights()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Flights for Changi Airport Terminal 5");
@@ -171,14 +171,14 @@ namespace S10270399_PRG2Assignment
                     airlineName = airline.Name;
                 }
 
-                Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-18} {4,-25:g}", flight.FlightNumber,airlineName,flight.Origin,flight.Destination,flight.Expectedtime);
+                Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-18} {4,-25:g}", flight.FlightNumber, airlineName, flight.Origin, flight.Destination, flight.Expectedtime);
             }
         }
 
         //==========================================================
         // FEATURE 4
         //==========================================================
-        static void ListBoardingGates()
+        public static void ListBoardingGates()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
@@ -193,14 +193,14 @@ namespace S10270399_PRG2Assignment
                 {
                     flightNumber = gate.Flight.FlightNumber;
                 }
-                Console.WriteLine("{0,-13} {1,-13} {2,-13} {3,-13} {4,-15}",gate.GateName,gate.SupportsDDJB, gate.SupportsCFFT,gate.SupportsLWTT,flightNumber);
+                Console.WriteLine("{0,-13} {1,-13} {2,-13} {3,-13} {4,-15}", gate.GateName, gate.SupportsDDJB, gate.SupportsCFFT, gate.SupportsLWTT, flightNumber);
             }
         }
 
         //==========================================================
         // FEATURE 5
         //==========================================================
-        static void AssignBoardingGate()
+        public static void AssignBoardingGate()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Assign a Boarding Gate to a Flight");
@@ -249,7 +249,7 @@ namespace S10270399_PRG2Assignment
         //==========================================================
         // FEATURE 6
         //==========================================================
-        static void CreateNewFlight()
+        public static void CreateNewFlight()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Create New Flight");
@@ -262,7 +262,9 @@ namespace S10270399_PRG2Assignment
                 string flightNum = Console.ReadLine().Trim().ToUpper();
 
                 // Validate flight number format (2 letters followed by space and numbers)
-                if (!System.Text.RegularExpressions.Regex.IsMatch(flightNum, @"^[A-Z]{2}\s\d+$"))
+                string[] parts = flightNum.Split(' ');
+
+                if (parts.Length != 2 || parts[0].Length != 2 || !parts[0].All(char.IsUpper) || !parts[1].All(char.IsDigit))
                 {
                     Console.WriteLine("Invalid flight number format. Should be like 'SQ 123'");
                     return;
@@ -323,12 +325,11 @@ namespace S10270399_PRG2Assignment
                     throw new ArgumentException("Invalid special request code");
                 }
 
-
-                // add flight to terminal and airline
+                // Add flight to terminal and airline
                 terminal.Flights[flightNum] = newFlight;
                 terminal.Airlines[airlineCode].AddFlight(newFlight);
 
-                // append to CSV file
+                // Append to CSV file
                 using (StreamWriter sw = File.AppendText("flights.csv"))
                 {
                     sw.WriteLine($"{flightNum},{origin},{destination},{expectedTime:dd/MM/yyyy HH:mm},{specialRequestCode}");
@@ -346,11 +347,12 @@ namespace S10270399_PRG2Assignment
             {
                 Console.WriteLine($"Error creating flight: {ex.Message}");
             }
+
         }
         //==========================================================
         // FEATURE 7
         //==========================================================
-        static void DisplayAirlineFlights()
+        public static void DisplayAirlineFlights()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
@@ -371,17 +373,20 @@ namespace S10270399_PRG2Assignment
                 return;
             }
 
-            Console.WriteLine($"\nFlights for {selectedAirline.Name}:");
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine($"List of Flights for {selectedAirline.Name}:");
+            Console.WriteLine("=============================================\n");
+            Console.WriteLine("{0,-15} {1,-20} {2,-18} {3,-18} {4,-25}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
             foreach (var flight in selectedAirline.Flights.Values)
             {
-                DisplayFlightDetails(flight);
+                DisplayAirline(flight);
             }
         }
 
         //==========================================================
-        // FEATURE 8
+        // FEATURE 8     OPTION 6
         //==========================================================
-        static void ModifyFlightDetails()
+        public static void ModifyFlightDetails()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
@@ -404,11 +409,12 @@ namespace S10270399_PRG2Assignment
                 return;
             }
 
-            // Display flights for selected airline
+            // Display 6. Modify Flight Details
             Console.WriteLine($"\nList of Flights for {selectedAirline.Name}");
+            Console.WriteLine("{0,-15} {1,-20} {2,-18} {3,-18} {4,-25}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
             foreach (var flight in selectedAirline.Flights.Values)
             {
-                DisplayFlightDetails(flight);
+                DisplayAirline(flight);
             }
 
             // Get flight to modify
@@ -423,7 +429,7 @@ namespace S10270399_PRG2Assignment
 
             Console.WriteLine("\n1. Modify Flight");
             Console.WriteLine("2. Delete Flight");
-            Console.WriteLine("\nChoose an option: ");
+            Console.WriteLine("Choose an option: ");
 
             string choice = Console.ReadLine().Trim();
 
@@ -441,13 +447,13 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        static void ModifyFlight(Flight flight)
+        public static void ModifyFlight(Flight flight)
         {
             Console.WriteLine("\n1. Modify Basic Information");
             Console.WriteLine("2. Modify Status");
             Console.WriteLine("3. Modify Special Request Code");
             Console.WriteLine("4. Modify Boarding Gate");
-            Console.Write("\nChoose an option: ");
+            Console.Write("Choose an option: ");
 
             string choice = Console.ReadLine().Trim();
 
@@ -456,7 +462,7 @@ namespace S10270399_PRG2Assignment
                 switch (choice)
                 {
                     case "1":
-                        Console.Write("Enter new Origin: ");
+                        Console.Write("\nEnter new Origin: ");
                         flight.Origin = Console.ReadLine().Trim();
 
                         Console.Write("Enter new Destination: ");
@@ -479,7 +485,7 @@ namespace S10270399_PRG2Assignment
                         break;
 
                     case "3":   //-handling of user input for special request
-                        Console.WriteLine("Note: Changing special request code will create a new flight object.");
+                        Console.WriteLine("\nNote: Changing special request code will create a new flight object.");
                         Console.Write("Enter new Special Request Code (CFFT/DDJB/LWTT/None): ");
                         string newCode = Console.ReadLine().Trim().ToUpper();
 
@@ -528,7 +534,7 @@ namespace S10270399_PRG2Assignment
                             currentGate.Flight = null;  // Remove current assignment
                         }
 
-                        Console.Write("Enter new Boarding Gate: ");
+                        Console.Write("\nEnter new Boarding Gate: ");
                         string newGateName = Console.ReadLine().Trim().ToUpper();
 
                         if (terminal.BoardingGates.TryGetValue(newGateName, out BoardingGate newGate))
@@ -571,8 +577,8 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine($"Error modifying flight: {ex.Message}");
             }
         }
-      
-        static void DeleteFlight(Airline airline, Flight flight)
+
+        public static void DeleteFlight(Airline airline, Flight flight)
         {
             Console.Write("Are you sure you want to delete this flight? (Y/N): ");
             if (Console.ReadLine().Trim().ToUpper() == "Y")
@@ -606,13 +612,13 @@ namespace S10270399_PRG2Assignment
         // FEATURE 9
         //==========================================================
 
-        static void DisplayFlightSchedule()
+        public static void DisplayFlightSchedule()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
             Console.WriteLine("=============================================\n");
 
-            
+
             List<Flight> sortedFlights = new List<Flight>(terminal.Flights.Values);
             //  IComparable Sort()
             sortedFlights.Sort();
@@ -628,7 +634,7 @@ namespace S10270399_PRG2Assignment
                     if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
                     {
                         gateName = gate.GateName;
-                        break; 
+                        break;
                     }
                 }
 
@@ -650,13 +656,25 @@ namespace S10270399_PRG2Assignment
                     gateName);
             }
         }
-        
 
 
 
 
-        static void DisplayFlightDetails(Flight flight)
+
+        public static void DisplayFlightDetails(Flight flight)
         {
+            //Console.WriteLine("{0,-15} {1,-20} {2,-18} {3,-18} {4,-25}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
+
+            //string airlineName = "Unknown";
+            //var airline = terminal.GetAirlineFromFlight(flight);   //using terminal get airline method
+            //if (airline != null && airline.Name != null)
+            //{
+            //    airlineName = airline.Name;
+            //}
+
+            //Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-20} {flight.Origin,-18} {flight.Destination,-18} {flight.Expectedtime:g,-25}");
+
+
             Console.WriteLine($"\nFlight Number: {flight.FlightNumber}");
             Console.WriteLine($"Origin: {flight.Origin}");
             Console.WriteLine($"Destination: {flight.Destination}");
@@ -672,10 +690,39 @@ namespace S10270399_PRG2Assignment
             else if (flight is NORMFlight)
                 Console.WriteLine("Special Request Code: None");
         }
-        
-        static void UpdateFlightStatus(Flight flight)
+
+
+
+
+
+
+        public static void DisplayAirline(Flight flight)
         {
-            Console.WriteLine("1. Delayed");
+
+            string airlineName = "Unknown";
+            var airline = terminal.GetAirlineFromFlight(flight);   //using terminal get airline method
+            if (airline != null && airline.Name != null)
+            {
+                airlineName = airline.Name;
+            }
+
+            Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-20} {flight.Origin,-18} {flight.Destination,-18} {flight.Expectedtime,-25}");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+            public static void UpdateFlightStatus(Flight flight)
+        {
+            Console.WriteLine("\n1. Delayed");
             Console.WriteLine("2. Boarding");
             Console.WriteLine("3. On Time");
             Console.WriteLine("\nSelect new status:");
@@ -703,7 +750,7 @@ namespace S10270399_PRG2Assignment
 
 
 
-        static void RunMainMenu()
+        public static void RunMainMenu()
         {
             while (true)
             {
@@ -743,7 +790,7 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        static void DisplayMainMenu()
+        public static void DisplayMainMenu()
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Welcome to Changi Airport Terminal 5");
