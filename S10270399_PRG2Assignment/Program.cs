@@ -561,21 +561,41 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine("\nFlight updated!");
                 DisplayFlightDetails(flight);
 
-                BoardingGate assignedGate = null; //make it null
-                foreach (var gate in terminal.BoardingGates.Values)
-                {
-                    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
-                    {
-                        assignedGate = gate;
-                        Console.WriteLine($"Boarding Gate: {assignedGate?.GateName ?? "Unassigned"}");
-                        break;
-                    }
-                }
+               
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error modifying flight: {ex.Message}");
             }
+            //BoardingGate assignedGate = null; //make it null
+            //foreach (var gate in terminal.BoardingGates.Values)
+            //{
+            //    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+            //    {
+            //        assignedGate = gate;
+            //        Console.WriteLine($"Boarding Gate: {assignedGate.GateName}");
+
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Boarding Gate: Unassigned");
+            //        break;
+            //    }
+            //}
+            BoardingGate assignedGate = null;
+            bool gateFound = false;
+
+            foreach (var gate in terminal.BoardingGates.Values)
+            {
+                if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+                {
+                    assignedGate = gate;
+                    gateFound = true;
+                    break;
+                }
+            }
+
+            Console.WriteLine($"Boarding Gate: {(gateFound ? assignedGate.GateName : "Unassigned")}");
         }
 
         public static void DeleteFlight(Airline airline, Flight flight)
@@ -725,7 +745,7 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("\n1. Delayed");
             Console.WriteLine("2. Boarding");
             Console.WriteLine("3. On Time");
-            Console.WriteLine("\nSelect new status:");
+            Console.WriteLine("Select new status:");
 
             string choice = Console.ReadLine().Trim();
             switch (choice)
