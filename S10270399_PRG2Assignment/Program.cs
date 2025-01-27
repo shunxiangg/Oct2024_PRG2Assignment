@@ -803,6 +803,11 @@ namespace S10270399_PRG2Assignment
                     case "8":
                         ProcessUnassignedFlights();
                         break;
+                    //case "9":
+                    //    DisplayAirlineFees();
+                    //    break;
+
+
                     case "0":
                         Console.WriteLine("Goodbye!");
                         return;
@@ -971,6 +976,9 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"\nProcessed {processedCount} out of {totalUnassignedFlights} flights");
             Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
         }
+
+
+
 
     }
 }
