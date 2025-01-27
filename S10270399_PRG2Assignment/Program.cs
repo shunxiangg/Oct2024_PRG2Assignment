@@ -772,7 +772,9 @@ namespace S10270399_PRG2Assignment
 
 
         //===============================================================
-        // ADVANCED FEATURE A - Process Unassigned Flights
+        // ADVANCED FEATURE A - Process Unassigned Flights 
+        // NAME: Ang Shun Xiang
+        // STUDENT ID: S10270399
         //=============================================================
         public static void ProcessUnassignedFlights()
         {
@@ -870,6 +872,14 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
         }
 
+
+
+
+
+
+
+
+
         public static void RunMainMenu()
         {
             while (true)
@@ -928,6 +938,10 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("5. Display Airline Flights");
             Console.WriteLine("6. Modify Flight Details");
             Console.WriteLine("7. Display Flight Schedule");
+
+            Console.WriteLine("8. Process all Unassigned Flights to boarding gate in bulk");
+            Console.WriteLine("9. Display the Total fee per airline for the day");
+
             Console.WriteLine("0. Exit");
             Console.WriteLine("\nPlease select your option:");
         }
