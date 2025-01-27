@@ -561,7 +561,7 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine("\nFlight updated!");
                 DisplayFlightDetails(flight);
 
-               
+
             }
             catch (Exception ex)
             {
@@ -770,6 +770,82 @@ namespace S10270399_PRG2Assignment
 
 
 
+        public static void RunMainMenu()
+        {
+            while (true)
+            {
+                DisplayMainMenu();
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        ListAllFlights();
+                        break;
+                    case "2":
+                        ListBoardingGates();
+                        break;
+                    case "3":
+                        AssignBoardingGate();
+                        break;
+                    case "4":
+                        CreateNewFlight();
+                        break;
+                    case "5":
+                        DisplayAirlineFlights();
+                        break;
+                    case "6":
+                        ModifyFlightDetails();
+                        break;
+                    case "7":
+                        DisplayFlightSchedule();
+                        break;
+                    case "8":
+                        ProcessUnassignedFlights();
+                        break;
+                    case "0":
+                        Console.WriteLine("Goodbye!");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+        }
+
+        public static void DisplayMainMenu()
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Welcome to Changi Airport Terminal 5");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("1. List All Flights");
+            Console.WriteLine("2. List Boarding Gates");
+            Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+            Console.WriteLine("4. Create Flight");
+            Console.WriteLine("5. Display Airline Flights");
+            Console.WriteLine("6. Modify Flight Details");
+            Console.WriteLine("7. Display Flight Schedule");
+            Console.WriteLine("8. (ADVANCE Feature) Process all unassigned flights to boarding gates in bulk");
+            Console.WriteLine("8. (ADVANCE Feature) Display the total fee per airline for the day");
+
+            Console.WriteLine("0. Exit");
+            Console.WriteLine("\nPlease select your option:");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //===============================================================
         // ADVANCED FEATURE A - Process Unassigned Flights 
@@ -778,11 +854,11 @@ namespace S10270399_PRG2Assignment
         //=============================================================
         public static void ProcessUnassignedFlights()
         {
-            Queue<Flight> unassignedFlights = new Queue<Flight>(); 
+            Queue<Flight> unassignedFlights = new Queue<Flight>();
             int totalUnassignedFlights = 0;
             int totalUnassignedGates = 0;
             //for each Flight, check if a Boarding Gate is assigned; if there is none, add it to a queue
-            foreach (var flight in terminal.Flights.Values) 
+            foreach (var flight in terminal.Flights.Values)
             {
                 bool isAssigned = false;
                 foreach (var gate in terminal.BoardingGates.Values)
@@ -800,7 +876,7 @@ namespace S10270399_PRG2Assignment
                 }
             }
 
-           // For each Boarding Gate, check if a Flight Number has been assigned
+            // For each Boarding Gate, check if a Flight Number has been assigned
             foreach (var gate in terminal.BoardingGates.Values)
             {
                 if (gate.Flight == null)
@@ -811,9 +887,13 @@ namespace S10270399_PRG2Assignment
             }
             // 	display the total number of Flights that do not have any Boarding Gate assigned yet
             Console.WriteLine($"\nTotal unassigned flights: {totalUnassignedFlights}");
-          //  Display the total number of Boarding Gates that do not have a Flight Number assigned yet
+            //  Display the total number of Boarding Gates that do not have a Flight Number assigned yet
             Console.WriteLine($"Total available gates: {totalUnassignedGates}");
-
+            Console.WriteLine("\n\nAssigned Flight Details:");
+            Console.WriteLine("=================ADVANCE FEATURE A========================================================================");
+            Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-20} {4,-15} {5,-25}",
+                "Flight Number", "Airline Name", "Origin", "Destination", "Gate Name", "Departure Time");
+            Console.WriteLine("==========================================================================================================");
             int processedCount = 0;
             // For each Flight in the queue, dequeue the first Flight in the queue
             while (unassignedFlights.Count > 0)
@@ -852,11 +932,30 @@ namespace S10270399_PRG2Assignment
                     if (isCompatible)
                     {
                         gate.Flight = flight;
+
                         assigned = true;
                         processedCount = processedCount + 1;
-                        //Display the Flight details with Basic Information of all Flights
-                        Console.WriteLine($"Assigned flight {flight.FlightNumber} ({flight.AirlineName}) from {flight.Origin} to {flight.Destination} to gate {gate.GateName}. Expected Departure: {flight.ExpectedDepartureTime}, Arrival: {flight.ExpectedArrivalTime}");
 
+                        ////Display the Flight details with Basic Information of all Flights
+                        //Console.WriteLine($"Assigned flight {flight.FlightNumber} to gate {gate.GateName}");
+                        string airlineCode = flight.FlightNumber.Substring(0, 2); // split the string starting from the first index then select 2 number
+                        string airlineName;
+                        if (terminal.Airlines.ContainsKey(airlineCode))
+                        {
+                            airlineName = terminal.Airlines[airlineCode].Name; // get airline name if the code exists
+                        }
+                        else
+                        {
+                            airlineName = "Unknown Airline"; // console write line this if the code does not exist
+                        }
+
+                        Console.WriteLine("{0,-15} {1,-20} {2,-20} {3,-20} {4,-15} {5,-25}",
+                        flight.FlightNumber,
+                        airlineName,
+                        flight.Origin,
+                        flight.Destination,
+                        gate.GateName,
+                        flight.Expectedtime.ToString("g"));
                         break;
                     }
                 }
@@ -866,87 +965,28 @@ namespace S10270399_PRG2Assignment
                     Console.WriteLine($"Could not find suitable gate for flight {flight.FlightNumber}");
                 }
             }
+            Console.WriteLine("==========================================================================================================");
             //Display the total number of Flights and Boarding Gates processed and assigned
             double processedPercentage = (processedCount / (double)totalUnassignedFlights) * 100;
             Console.WriteLine($"\nProcessed {processedCount} out of {totalUnassignedFlights} flights");
             Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
         }
 
-
-
-
-
-
-
-
-
-        public static void RunMainMenu()
-        {
-            while (true)
-            {
-                DisplayMainMenu();
-                string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1":
-                        ListAllFlights();
-                        break;
-                    case "2":
-                        ListBoardingGates();
-                        break;
-                    case "3":
-                        AssignBoardingGate();
-                        break;
-                    case "4":
-                        CreateNewFlight();
-                        break;
-                    case "5":
-                        DisplayAirlineFlights();
-                        break;
-                    case "6":
-                        ModifyFlightDetails();
-                        break;
-                    case "7":
-                        DisplayFlightSchedule();
-                        break;
-                    case "8":
-                        ProcessUnassignedFlights();
-                        break;
-                    case "9":
-                        DisplayAirlineFees();
-                        break;
-                    case "0":
-                        Console.WriteLine("Goodbye!");
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
-        }
-
-        public static void DisplayMainMenu()
-        {
-            Console.WriteLine("\n=============================================");
-            Console.WriteLine("Welcome to Changi Airport Terminal 5");
-            Console.WriteLine("=============================================");
-            Console.WriteLine("1. List All Flights");
-            Console.WriteLine("2. List Boarding Gates");
-            Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-            Console.WriteLine("4. Create Flight");
-            Console.WriteLine("5. Display Airline Flights");
-            Console.WriteLine("6. Modify Flight Details");
-            Console.WriteLine("7. Display Flight Schedule");
-
-            Console.WriteLine("8. Process all Unassigned Flights to boarding gate in bulk");
-            Console.WriteLine("9. Display the Total fee per airline for the day");
-
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("\nPlease select your option:");
-        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
