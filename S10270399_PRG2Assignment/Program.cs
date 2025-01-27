@@ -832,6 +832,31 @@ namespace S10270399_PRG2Assignment
 
                     bool isCompatible = false;
 
+                    //If no, search for an unassigned Boarding Gate that has no Special Request Code
+                    if (specialRequest == "")
+                    {
+                        // For normal flights any free gate is fine
+                        isCompatible = true;
+                    }
+                    else
+                    {
+                        // Check if gate supports the special request
+                        isCompatible = (specialRequest == "CFFT" && gate.SupportsCFFT) ||
+                                     (specialRequest == "DDJB" && gate.SupportsDDJB) ||
+                                     (specialRequest == "LWTT" && gate.SupportsLWTT);
+                    }
+
+                    //Assign the Boarding Gate to the Flight Number
+                    if (isCompatible)
+                    {
+                        gate.Flight = flight;
+                        assigned = true;
+                        processedCount = processedCount + 1;
+                        //Display the Flight details with Basic Information of all Flights
+                        Console.WriteLine($"Assigned flight {flight.FlightNumber} ({flight.AirlineName}) from {flight.Origin} to {flight.Destination} to gate {gate.GateName}. Expected Departure: {flight.ExpectedDepartureTime}, Arrival: {flight.ExpectedArrivalTime}");
+
+                        break;
+                    }
                 }
 
                 if (!assigned)
