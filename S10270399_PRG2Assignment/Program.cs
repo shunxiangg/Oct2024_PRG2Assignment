@@ -812,6 +812,28 @@ namespace S10270399_PRG2Assignment
           //  Display the total number of Boarding Gates that do not have a Flight Number assigned yet
             Console.WriteLine($"Total available gates: {totalUnassignedGates}");
 
+            int processedCount = 0;
+            // For each Flight in the queue, dequeue the first Flight in the queue
+            while (unassignedFlights.Count > 0)
+            {
+                Flight flight = unassignedFlights.Dequeue();
+                bool assigned = false;
+
+                //Check if the Flight has a Special Request Code
+                string specialRequest = "";
+                if (flight is CFFTFFlight) specialRequest = "CFFT";
+                else if (flight is DDJBFlight) specialRequest = "DDJB";
+                else if (flight is LWTTFlight) specialRequest = "LWTT";
+
+                //  If yes, search for an unassigned Boarding Gate that matches the Special Request Code
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.Flight != null) continue;
+
+                    bool isCompatible = false;
+
+                }
+
                 if (!assigned)
                 {
                     Console.WriteLine($"Could not find suitable gate for flight {flight.FlightNumber}");
