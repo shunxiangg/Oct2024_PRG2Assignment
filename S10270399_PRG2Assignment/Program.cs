@@ -740,7 +740,7 @@ namespace S10270399_PRG2Assignment
 
 
 
-            public static void UpdateFlightStatus(Flight flight)
+        public static void UpdateFlightStatus(Flight flight)
         {
             Console.WriteLine("\n1. Delayed");
             Console.WriteLine("2. Boarding");
@@ -769,6 +769,59 @@ namespace S10270399_PRG2Assignment
 
 
 
+
+
+        //===============================================================
+        // ADVANCED FEATURE A - Process Unassigned Flights
+        //=============================================================
+        public static void ProcessUnassignedFlights()
+        {
+            Queue<Flight> unassignedFlights = new Queue<Flight>(); 
+            int totalUnassignedFlights = 0;
+            int totalUnassignedGates = 0;
+            //for each Flight, check if a Boarding Gate is assigned; if there is none, add it to a queue
+            foreach (var flight in terminal.Flights.Values) 
+            {
+                bool isAssigned = false;
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        isAssigned = true;
+                        break;
+                    }
+                }
+                if (!isAssigned)       //if (isAssigned == false)
+                {
+                    unassignedFlights.Enqueue(flight);
+                    totalUnassignedFlights++;
+                }
+            }
+
+           // For each Boarding Gate, check if a Flight Number has been assigned
+            foreach (var gate in terminal.BoardingGates.Values)
+            {
+                if (gate.Flight == null)
+                {
+                    totalUnassignedGates = totalUnassignedGates + 1;
+
+                }
+            }
+            // 	display the total number of Flights that do not have any Boarding Gate assigned yet
+            Console.WriteLine($"\nTotal unassigned flights: {totalUnassignedFlights}");
+          //  Display the total number of Boarding Gates that do not have a Flight Number assigned yet
+            Console.WriteLine($"Total available gates: {totalUnassignedGates}");
+
+                if (!assigned)
+                {
+                    Console.WriteLine($"Could not find suitable gate for flight {flight.FlightNumber}");
+                }
+            }
+            //Display the total number of Flights and Boarding Gates processed and assigned
+            double processedPercentage = (processedCount / (double)totalUnassignedFlights) * 100;
+            Console.WriteLine($"\nProcessed {processedCount} out of {totalUnassignedFlights} flights");
+            Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
+        }
 
         public static void RunMainMenu()
         {
@@ -800,6 +853,12 @@ namespace S10270399_PRG2Assignment
                     case "7":
                         DisplayFlightSchedule();
                         break;
+                    case "8":
+                        ProcessUnassignedFlights();
+                        break;
+                    case "9":
+                        DisplayAirlineFees();
+                        break;
                     case "0":
                         Console.WriteLine("Goodbye!");
                         return;
@@ -827,20 +886,6 @@ namespace S10270399_PRG2Assignment
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
