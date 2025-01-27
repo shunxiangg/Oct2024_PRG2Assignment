@@ -826,7 +826,7 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("6. Modify Flight Details");
             Console.WriteLine("7. Display Flight Schedule");
             Console.WriteLine("8. (ADVANCE Feature) Process all unassigned flights to boarding gates in bulk");
-            Console.WriteLine("8. (ADVANCE Feature) Display the total fee per airline for the day");
+            Console.WriteLine("9. (ADVANCE Feature) Display the total fee per airline for the day");
 
             Console.WriteLine("0. Exit");
             Console.WriteLine("\nPlease select your option:");
