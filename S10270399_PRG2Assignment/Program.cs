@@ -803,9 +803,9 @@ namespace S10270399_PRG2Assignment
                     case "8":
                         ProcessUnassignedFlights();
                         break;
-                    //case "9":
-                    //    DisplayAirlineFees();
-                    //    break;
+                    case "9":
+                        DisplayAirlineFees();
+                        break;
 
 
                     case "0":
@@ -983,8 +983,45 @@ namespace S10270399_PRG2Assignment
         // STUDENT ID: S10267626E
         //=============================================================
 
-        public static void CalculateDailyAirlineFees()
-        { 
+        public static void DisplayAirlineFees()
+        {
+            // Initialize Terminal 5
+            Terminal terminal5 = new Terminal("Terminal 5");
+
+            // Create boarding gates
+            BoardingGate gateA = new BoardingGate("A1", true, false, false);
+            BoardingGate gateB = new BoardingGate("B1", false, true, false);
+            BoardingGate gateC = new BoardingGate("C1", false, false, true);
+
+            terminal5.AddBoardingGate(gateA);
+            terminal5.AddBoardingGate(gateB);
+            terminal5.AddBoardingGate(gateC);
+
+            // Create airlines
+            Airline singaporeAirlines = new Airline { Name = "Singapore Airlines", Code = "SQ" };
+            Airline thaiAirways = new Airline { Name = "Thai Airways", Code = "TG" };
+
+            // Create and add flights for Singapore Airlines
+            singaporeAirlines.AddFlight(new NORMFlight("SQ123", "BKK", "SIN",
+                new DateTime(2025, 2, 1, 10, 30, 0), "Scheduled"));
+            singaporeAirlines.AddFlight(new DDJBFlight("SQ456", "SIN", "NRT",
+                new DateTime(2025, 2, 1, 22, 15, 0), "Scheduled", 300));
+            singaporeAirlines.AddFlight(new CFFTFFlight("SQ789", "DXB", "SIN",
+                new DateTime(2025, 2, 1, 8, 45, 0), "Scheduled", 150));
+
+            // Create and add flights for Thai Airways
+            thaiAirways.AddFlight(new LWTTFlight("TG234", "SIN", "BKK",
+                new DateTime(2025, 2, 1, 23, 00, 0), "Scheduled", 500));
+            thaiAirways.AddFlight(new NORMFlight("TG567", "SIN", "BKK",
+                new DateTime(2025, 2, 1, 14, 30, 0), "Scheduled"));
+
+            // Add airlines to terminal
+            terminal5.AddAirline(singaporeAirlines);
+            terminal5.AddAirline(thaiAirways);
+
+            Console.WriteLine("Terminal 5 - Airline Fees");
+            Console.WriteLine("========================");
+            terminal5.PrintAirlineFees();
         }
         }
 }
