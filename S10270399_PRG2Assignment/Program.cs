@@ -977,10 +977,16 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
         }
 
+        //===============================================================
+        // ADVANCED FEATURE B - Display the total fee per airline for the day        
+        // NAME: Aiden Tan
+        // STUDENT ID: S10267626E
+        //=============================================================
 
-
-
-    }
+        public static void CalculateDailyAirlineFees()
+        { 
+        }
+        }
 }
 
 

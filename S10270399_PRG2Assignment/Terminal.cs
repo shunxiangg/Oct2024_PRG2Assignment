@@ -19,7 +19,15 @@ namespace S10270399_PRG2Assignment
         public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
         public Dictionary<string, BoardingGate> BoardingGates { get; set; } = new Dictionary<string, BoardingGate>();
         public Dictionary<string, double> GateFees { get; set; } = new Dictionary<string, double>();
+        //adv 2//
+        private const double ARRIVING_FEE = 500;
+        private const double DEPARTING_FEE = 800;
+        private const double GATE_BASE_FEE = 300;
+        private const double DDJB_REQUEST_FEE = 300;
+        private const double CFFT_REQUEST_FEE = 150;
+        private const double LWTT_REQUEST_FEE = 500;
 
+        //
         public Terminal() { }
         public Terminal(string terminalName)
         {

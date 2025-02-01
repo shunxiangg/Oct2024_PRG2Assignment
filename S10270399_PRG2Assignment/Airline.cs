@@ -73,7 +73,7 @@ namespace S10270399_PRG2Assignment
             }
         }
 
-        public override string ToString()
+            public override string ToString()
         {
             return $"Airline: {Name} ({Code}) - {Flights.Count} flights";
         }
