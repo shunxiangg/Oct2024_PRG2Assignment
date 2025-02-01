@@ -977,53 +977,153 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine($"Processing percentage: {processedPercentage:F2}%");
         }
 
-        //===============================================================
-        // ADVANCED FEATURE B - Display the total fee per airline for the day        
+
+
+
+
+
+
+
+
+
+        //==========================================================
+        // ADVANCED FEATURE B - Display Airline Fees
         // NAME: Aiden Tan
         // STUDENT ID: S10267626E
-        //=============================================================
-
+        //==========================================================
         public static void DisplayAirlineFees()
         {
-            // Initialize Terminal 5
-            Terminal terminal5 = new Terminal("Terminal 5");
+            // First check if all flights have gates assigned
+            bool allFlightsAssigned = true;
+            foreach (var flight in terminal.Flights.Values)
+            {
+                bool hasGate = false;
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        hasGate = true;
+                        break;
+                    }
+                }
+                if (!hasGate)
+                {
+                    allFlightsAssigned = false;
+                    break;
+                }
+            }
 
-            // Create boarding gates
-            BoardingGate gateA = new BoardingGate("A1", true, false, false);
-            BoardingGate gateB = new BoardingGate("B1", false, true, false);
-            BoardingGate gateC = new BoardingGate("C1", false, false, true);
+            if (!allFlightsAssigned)
+            {
+                Console.WriteLine("\nWarning: Not all flights have been assigned gates.");
+                Console.WriteLine("Please assign gates to all flights before calculating fees.");
+                return;
+            }
 
-            terminal5.AddBoardingGate(gateA);
-            terminal5.AddBoardingGate(gateB);
-            terminal5.AddBoardingGate(gateC);
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Airline Fees Report for Terminal 5");
+            Console.WriteLine("=============================================\n");
 
-            // Create airlines
-            Airline singaporeAirlines = new Airline { Name = "Singapore Airlines", Code = "SQ" };
-            Airline thaiAirways = new Airline { Name = "Thai Airways", Code = "TG" };
+            double totalTerminalFees = 0;
+            double totalDiscounts = 0;
 
-            // Create and add flights for Singapore Airlines
-            singaporeAirlines.AddFlight(new NORMFlight("SQ123", "BKK", "SIN",
-                new DateTime(2025, 2, 1, 10, 30, 0), "Scheduled"));
-            singaporeAirlines.AddFlight(new DDJBFlight("SQ456", "SIN", "NRT",
-                new DateTime(2025, 2, 1, 22, 15, 0), "Scheduled", 300));
-            singaporeAirlines.AddFlight(new CFFTFFlight("SQ789", "DXB", "SIN",
-                new DateTime(2025, 2, 1, 8, 45, 0), "Scheduled", 150));
+            foreach (var airline in terminal.Airlines.Values)
+            {
+                if (airline.Flights.Count == 0) continue;
 
-            // Create and add flights for Thai Airways
-            thaiAirways.AddFlight(new LWTTFlight("TG234", "SIN", "BKK",
-                new DateTime(2025, 2, 1, 23, 00, 0), "Scheduled", 500));
-            thaiAirways.AddFlight(new NORMFlight("TG567", "SIN", "BKK",
-                new DateTime(2025, 2, 1, 14, 30, 0), "Scheduled"));
+                double subtotal = 0;
+                double discounts = 0;
 
-            // Add airlines to terminal
-            terminal5.AddAirline(singaporeAirlines);
-            terminal5.AddAirline(thaiAirways);
+                Console.WriteLine($"\nAirline: {airline.Name} ({airline.Code})");
+                Console.WriteLine("----------------------------------------");
 
-            Console.WriteLine("Terminal 5 - Airline Fees");
-            Console.WriteLine("========================");
-            terminal5.PrintAirlineFees();
+                /// Calculate base fees and special request fees
+                foreach (var flight in airline.Flights.Values)
+                {
+                    /// Base fee based on origin/destination
+                    double flightFee = flight.Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+                    subtotal += flightFee;
+
+                    // /Special request fees
+                    if (flight is CFFTFFlight)
+                    {
+                        CFFTFFlight cfftFlight = (CFFTFFlight)flight;
+                        subtotal += 150.00;
+                    }
+                    else if (flight is DDJBFlight)
+                    {
+                        subtotal += 300.00;
+                    }
+                    else if (flight is LWTTFlight)
+                    {
+                        subtotal += 500.00;
+                    }
+
+                    // Gate base fee
+                    subtotal += 300.00;
+                }
+
+                ///calculate discounts
+                int flightCount = airline.Flights.Count;
+
+                // discount for every 3 flights
+                discounts += Math.Floor(flightCount / 3.0) * 350.00;
+
+                // heck each flight for other discounts
+                foreach (var flight in airline.Flights.Values)
+                {
+                    // Off-peak timing discount
+                    var flightTime = flight.Expectedtime.TimeOfDay;
+                    if (flightTime < TimeSpan.FromHours(11) || flightTime > TimeSpan.FromHours(21))
+                    {
+                        discounts += 110.00;
+                    }
+
+                    // Special origin discount
+                    if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" ||
+                        flight.Origin == "Tokyo (NRT)")
+                    {
+                        discounts += 25.00;
+                    }
+
+                    // No special request discount
+                    if (flight is NORMFlight)
+                    {
+                        discounts += 50.00;
+                    }
+                }
+
+                if (flightCount > 5)
+                {
+                    discounts += subtotal * 0.03;
+                }
+
+                double finalTotal = subtotal - discounts;
+                totalTerminalFees += finalTotal;
+                totalDiscounts += discounts;
+
+                Console.WriteLine($"Subtotal: ${subtotal:F2}");
+                Console.WriteLine($"Discounts: ${discounts:F2}");
+                Console.WriteLine($"Final Total: ${finalTotal:F2}");
+            }
+
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Terminal Summary");
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"Total Terminal Fees: ${totalTerminalFees:F2}");
+            Console.WriteLine($"Total Discounts Applied: ${totalDiscounts:F2}");
+            double discountPercentage = (totalDiscounts / (totalTerminalFees + totalDiscounts)) * 100;
+            Console.WriteLine($"Discount Percentage: {discountPercentage:F2}%\n\n");
         }
-        }
+
+
+
+
+
+
+
+
+    }
 }
 
 

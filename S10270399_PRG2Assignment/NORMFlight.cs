@@ -12,18 +12,26 @@ using System.Threading.Tasks;
 
 namespace S10270399_PRG2Assignment
 {
-    public class NORMFlight : Flight
+    class NORMFlight : Flight
     {
         public NORMFlight() { }
-
-        public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedtime, string status)
-            : base(flightNumber, origin, destination, expectedtime, status)
+        public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedtime, string status) : base(flightNumber, origin, destination, expectedtime, status)
         {
         }
 
         public override double CalculateFees()
         {
-            return 0;  // No additional fees for normal flights
+            {
+                // Base fee for normal flights
+                return Origin == "Singapore (SIN)" ? 800.00 : 500.00;
+            }
         }
+
+        public override string ToString()
+        {
+            return $"NORM {base.ToString()}";
+        }
+
+
     }
 }

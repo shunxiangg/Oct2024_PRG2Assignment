@@ -4,9 +4,15 @@
 // Student2 Number  : S10270399
 // Partner2 Name	: Ang Shun Xiang
 //==========================================================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace S10270399_PRG2Assignment
 {
-    public abstract class Flight
+    abstract class Flight : IComparable<Flight>
     {
         public string FlightNumber { get; set; }
         public string Origin { get; set; }
@@ -15,7 +21,6 @@ namespace S10270399_PRG2Assignment
         public string Status { get; set; }
 
         public Flight() { }
-
         public Flight(string flightNumber, string origin, string destination, DateTime expectedtime, string status)
         {
             FlightNumber = flightNumber;
@@ -25,14 +30,22 @@ namespace S10270399_PRG2Assignment
             Status = status;
         }
 
-        public virtual double GetFees()
-        {
-            return 0;
-        }
+
+
+
+        public abstract double CalculateFees();
+
 
         public override string ToString()
         {
-            return FlightNumber;
+            return $"Flight {FlightNumber} from {Origin} to {Destination} at {Expectedtime:g} - Status: {Status}";
+        }
+
+
+        public int CompareTo(Flight other)
+        {
+            if (other == null) return 1;
+            return Expectedtime.CompareTo(other.Expectedtime);
         }
     }
 }
