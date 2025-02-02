@@ -806,6 +806,9 @@ namespace S10270399_PRG2Assignment
                     case "9":
                         DisplayAirlineFees();
                         break;
+                    case "10":
+                        HandleRemainingUnassignedFlights();
+                        break;
 
 
                     case "0":
@@ -1118,6 +1121,147 @@ namespace S10270399_PRG2Assignment
 
 
 
+
+
+
+        //==========================================================
+        // ADDITIONAL FEATURE - Handle Remaining Unassigned Flights From Advance feature A else advance feature B cannot run as there is unassigned flight
+        //==========================================================
+
+        public static void HandleRemainingUnassignedFlights()
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Handling Remaining Unassigned Flights");
+            Console.WriteLine("=============================================\n");
+
+            List<Flight> unassignedFlights = new List<Flight>();
+            List<BoardingGate> availableGates = new List<BoardingGate>();
+
+            // Find all unassigned flights
+            foreach (var flight in terminal.Flights.Values)
+            {
+                bool isAssigned = false;
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        isAssigned = true;
+                        break;
+                    }
+                }
+                if (!isAssigned)
+                {
+                    unassignedFlights.Add(flight);
+                }
+            }
+
+            if (unassignedFlights.Count == 0)
+            {
+                Console.WriteLine("No unassigned flights found. All flights have been assigned to gates.");
+                return;
+            }
+
+            // Find all available gates
+            foreach (var gate in terminal.BoardingGates.Values)
+            {
+                if (gate.Flight == null)
+                {
+                    availableGates.Add(gate);
+                }
+            }
+
+            if (availableGates.Count == 0)
+            {
+                Console.WriteLine("No available gates found. Cannot process remaining unassigned flights.");
+                return;
+            }
+
+            Console.WriteLine($"Found {unassignedFlights.Count} unassigned flights and {availableGates.Count} available gates.\n");
+
+            Console.WriteLine("Unassigned Flights:");
+            foreach (var flight in unassignedFlights)
+            {
+                string specialRequest = "";
+                if (flight is CFFTFFlight) specialRequest = "CFFT";
+                else if (flight is DDJBFlight) specialRequest = "DDJB";
+                else if (flight is LWTTFlight) specialRequest = "LWTT";
+                else specialRequest = "NORM";
+
+                Console.WriteLine($"Flight {flight.FlightNumber} - Type: {specialRequest}");
+            }
+
+            Console.WriteLine("\nAvailable Gates and their capabilities:");
+            foreach (var gate in availableGates)
+            {
+                Console.WriteLine($"Gate {gate.GateName} - CFFT: {gate.SupportsCFFT}, DDJB: {gate.SupportsDDJB}, LWTT: {gate.SupportsLWTT}");
+            }
+
+            Console.WriteLine("\nWould you like to attempt to assign these flights? (Y/N)");
+            if (Console.ReadLine().Trim().ToUpper() != "Y")
+            {
+                return;
+            }
+
+            int assignedCount = 0;
+            Console.WriteLine("\nAssignment Results:");
+            Console.WriteLine("==========================================");
+
+            foreach (var flight in unassignedFlights)
+            {
+                BoardingGate bestGate = null;
+                int bestCompatibilityScore = -1;
+
+                foreach (var gate in availableGates)
+                {
+                    if (gate.Flight != null) continue;
+
+                    int compatibilityScore = 0;
+
+                    // Check compatibility based on flight type
+                    if (flight is CFFTFFlight && gate.SupportsCFFT) compatibilityScore = 3;
+                    else if (flight is DDJBFlight && gate.SupportsDDJB) compatibilityScore = 3;
+                    else if (flight is LWTTFlight && gate.SupportsLWTT) compatibilityScore = 3;
+                    else if (flight is NORMFlight) compatibilityScore = 1;
+
+                    // If this gate is better than our current best option
+                    if (compatibilityScore > bestCompatibilityScore)
+                    {
+                        bestCompatibilityScore = compatibilityScore;
+                        bestGate = gate;
+                    }
+                }
+
+                if (bestGate != null)
+                {
+                    bestGate.Flight = flight;
+                    availableGates.Remove(bestGate);
+                    assignedCount++;
+
+                    string specialRequest = "";
+                    if (flight is CFFTFFlight) specialRequest = "CFFT";
+                    else if (flight is DDJBFlight) specialRequest = "DDJB";
+                    else if (flight is LWTTFlight) specialRequest = "LWTT";
+                    else specialRequest = "NORM";
+
+                    Console.WriteLine($"Assigned flight {flight.FlightNumber} ({specialRequest}) to gate {bestGate.GateName}");
+                }
+                else
+                {
+                    Console.WriteLine($"Could not find a suitable gate for flight {flight.FlightNumber}");
+                }
+            }
+
+            Console.WriteLine("\nSummary:");
+            Console.WriteLine($"Successfully assigned {assignedCount} out of {unassignedFlights.Count} flights");
+            double successRate = (double)assignedCount / unassignedFlights.Count * 100;
+            Console.WriteLine($"Success rate: {successRate:F2}%");
+
+            if (assignedCount < unassignedFlights.Count)
+            {
+                Console.WriteLine($"\nWarning: {unassignedFlights.Count - assignedCount} flights remain unassigned!");
+                Console.WriteLine("Please consider manual assignment or reviewing gate availability.");
+            }
+        }
 
 
 
