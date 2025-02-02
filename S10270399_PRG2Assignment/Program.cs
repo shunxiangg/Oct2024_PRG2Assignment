@@ -129,6 +129,9 @@ namespace S10270399_PRG2Assignment
 
         public static Flight CreateFlight(string flightNum, string origin, string destination, DateTime expectedTime, string status, string specialRequestCode)
         {
+            // This method implements a factory pattern for creating different types of flights
+            // It handles the complexity of instantiating specific flight subclasses (CFFT, DDJB, LWTT, NORM)
+            // based on the special request code, with appropriate default request fees
             if (specialRequestCode == "CFFT")
             {
                 return new CFFTFFlight(flightNum, origin, destination, expectedTime, status, 50.0);
@@ -202,6 +205,10 @@ namespace S10270399_PRG2Assignment
         //==========================================================
         public static void AssignBoardingGate()
         {
+            // 1. Validates both flight and gate existence
+            // 2. Checks for gate availability
+            // 3. Allows status updates during assignment
+            // 4. Maintains the relationship between flights and gates
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Assign a Boarding Gate to a Flight");
             Console.WriteLine("=============================================");
@@ -714,8 +721,6 @@ namespace S10270399_PRG2Assignment
 
 
 
-
-
         public static void DisplayAirline(Flight flight)
         {
 
@@ -728,13 +733,6 @@ namespace S10270399_PRG2Assignment
 
             Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-20} {flight.Origin,-18} {flight.Destination,-18} {flight.Expectedtime,-25}");
         }
-
-
-
-
-
-
-
 
 
 
@@ -835,17 +833,10 @@ namespace S10270399_PRG2Assignment
             Console.WriteLine("7. Display Flight Schedule");
             Console.WriteLine("8. (ADVANCE Feature) Process all unassigned flights to boarding gates in bulk");
             Console.WriteLine("9. (ADVANCE Feature) Display the total fee per airline for the day");
-
+            Console.WriteLine("10. (Additional Feature) Handle Remaining Unassigned Flights");
             Console.WriteLine("0. Exit");
             Console.WriteLine("\nPlease select your option:");
         }
-
-
-
-
-
-
-
 
 
 
@@ -986,9 +977,6 @@ namespace S10270399_PRG2Assignment
 
 
 
-
-
-
         //==========================================================
         // ADVANCED FEATURE B - Display Airline Fees
         // NAME: Aiden Tan
@@ -1121,9 +1109,6 @@ namespace S10270399_PRG2Assignment
 
 
 
-
-
-
         //==========================================================
         // ADDITIONAL FEATURE - Handle Remaining Unassigned Flights From Advance feature A else advance feature B cannot run as there is unassigned flight
         //==========================================================
@@ -1137,7 +1122,7 @@ namespace S10270399_PRG2Assignment
             List<Flight> unassignedFlights = new List<Flight>();
             List<BoardingGate> availableGates = new List<BoardingGate>();
 
-            // Find all unassigned flights
+            /// This double loop finds flights that dont have gates assigned
             foreach (var flight in terminal.Flights.Values)
             {
                 bool isAssigned = false;
@@ -1154,6 +1139,7 @@ namespace S10270399_PRG2Assignment
                     unassignedFlights.Add(flight);
                 }
             }
+
 
             if (unassignedFlights.Count == 0)
             {
@@ -1190,11 +1176,17 @@ namespace S10270399_PRG2Assignment
                 Console.WriteLine($"Flight {flight.FlightNumber} - Type: {specialRequest}");
             }
 
+
             Console.WriteLine("\nAvailable Gates and their capabilities:");
+            Console.WriteLine("==========================================");
+            Console.WriteLine("{0,-10} {1,-15} {2,-15} {3,-15}", "Gate", "CFFT Support", "DDJB Support", "LWTT Support");
+            Console.WriteLine("------------------------------------------");
             foreach (var gate in availableGates)
             {
-                Console.WriteLine($"Gate {gate.GateName} - CFFT: {gate.SupportsCFFT}, DDJB: {gate.SupportsDDJB}, LWTT: {gate.SupportsLWTT}");
+                Console.WriteLine("{0,-10} {1,-15} {2,-15} {3,-15}",gate.GateName, gate.SupportsCFFT, gate.SupportsDDJB,gate.SupportsLWTT);
             }
+            Console.WriteLine("==========================================");
+
 
             Console.WriteLine("\nWould you like to attempt to assign these flights? (Y/N)");
             if (Console.ReadLine().Trim().ToUpper() != "Y")
@@ -1209,7 +1201,7 @@ namespace S10270399_PRG2Assignment
             foreach (var flight in unassignedFlights)
             {
                 BoardingGate bestGate = null;
-                int bestCompatibilityScore = -1;
+                int bestCompatibilityScore = -1; // Make this Assignmennt to Unassigned flights
 
                 foreach (var gate in availableGates)
                 {
@@ -1218,6 +1210,9 @@ namespace S10270399_PRG2Assignment
                     int compatibilityScore = 0;
 
                     // Check compatibility based on flight type
+                    // Score 3: Perfect match (special request flight with matching gate capability)
+                    // Score 1: Normal flight (can use any gate)
+                    // Score -1: No compatibility
                     if (flight is CFFTFFlight && gate.SupportsCFFT) compatibilityScore = 3;
                     else if (flight is DDJBFlight && gate.SupportsDDJB) compatibilityScore = 3;
                     else if (flight is LWTTFlight && gate.SupportsLWTT) compatibilityScore = 3;
